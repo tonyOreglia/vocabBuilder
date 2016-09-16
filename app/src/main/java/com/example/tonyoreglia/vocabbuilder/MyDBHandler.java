@@ -56,7 +56,8 @@ public class MyDBHandler extends SQLiteOpenHelper {
     //delete word from database
     public void deleteWord(String word) {
         SQLiteDatabase db = getWritableDatabase();
-        db.execSQL("DELETE FROM " + TABLE_WORDS + " WHERE " + COLUMN_WORD + "=\"" + word + "\";");
+        String formatted_word = word.substring(0,1).toUpperCase() + word.substring(1).toLowerCase();
+        db.execSQL("DELETE FROM " + TABLE_WORDS + " WHERE " + COLUMN_WORD + "=\"" + formatted_word + "\";");
     }
 
     //print out the database words as a string

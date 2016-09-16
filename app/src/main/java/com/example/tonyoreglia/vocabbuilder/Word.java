@@ -5,13 +5,15 @@ package com.example.tonyoreglia.vocabbuilder;
  */
 public class Word {
     public Word(String _word) {
-        this._word = _word;
+        this._word = _word.substring(0, 1).toUpperCase() + _word.substring(1).toLowerCase();
         this._definition = "";
+        //this._partOfSpeech = "";
         //set definition here
     }
     public Word(String _word, String _definition) {
-        this._word = _word;
+        this._word = _word.substring(0, 1).toUpperCase() + _word.substring(1).toLowerCase();
         this._definition = _definition;
+        //this._partOfSpeech = "";
     }
 
     public Word() {
@@ -20,6 +22,12 @@ public class Word {
     int _id;
     String _word;
     String _definition;
+    String _partOfSpeech;
+    String _example;
+    //String[] _definition;
+    //String[] _partOfSpeech;
+    //String[] _example;
+
 
     public String get_definition() {
         return _definition;

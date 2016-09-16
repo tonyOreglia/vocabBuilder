@@ -36,7 +36,7 @@ public class DisplayDefinitionActivity extends AppCompatActivity {
         if (word != null) {
             Log.i("INFO", "Setting word view");
             wordView = (TextView) findViewById(R.id.wordView);
-            wordView.setText(word);
+            wordView.setText(word + ":");
         }
         else {
             wordView.setText("Error. Unable to retrieve word from Database.");
