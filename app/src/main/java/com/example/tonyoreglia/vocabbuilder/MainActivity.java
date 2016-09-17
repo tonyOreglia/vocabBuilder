@@ -172,6 +172,7 @@ public class MainActivity extends AppCompatActivity {
             //dbHandler.updateWord(wordObject);
             dbHandler.addWord(wordObject);
             displayWordsInList();
+            //change
         }
 
         public String[] parseJson(String jsonDefinition) {
