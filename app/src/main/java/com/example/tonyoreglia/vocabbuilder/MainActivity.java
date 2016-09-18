@@ -159,36 +159,35 @@ public class MainActivity extends AppCompatActivity {
             }
             Log.i("INFO", response);
 
-            String[] def_word = parseJson(response);
-            String definition = def_word[0];
-            String word = def_word[1];
-
-            Log.i("INFO", "HERE");
-            Log.i("INFO", word);
-            Log.i("INFO", definition);
-
-            Word wordObject = new Word(word, definition);
+            Word wordDefinitions = parseJson(response);
 
             //dbHandler.updateWord(wordObject);
-            dbHandler.addWord(wordObject);
+
+            dbHandler.addWord(wordDefinitions);
+
             displayWordsInList();
-            //changechange
         }
 
-        public String[] parseJson(String jsonDefinition) {
+        public Word parseJson(String jsonDefinition) {
             try {
                 JSONObject definitions = (JSONObject) new JSONTokener(jsonDefinition).nextValue();
                 Log.i("INFO", "Inside JSON Parser");
                 Log.i("INFO", definitions.toString());
 
                 String word = definitions.optString("word").toString();
+                Word wordDefinitions = new Word(word);
                 //Get the instance of JSONArray that contains JSONObjects
                 JSONArray jsonDefinitionArray = definitions.optJSONArray("definitions");
-                JSONObject jsonDefinitionObject = jsonDefinitionArray.getJSONObject(0);
-                String definition = jsonDefinitionObject.optString("definition").toString();
+                for(int i = 0; i < jsonDefinitionArray.length() && (i < 3); i++) {
+                    JSONObject jsonDefinitionObject = jsonDefinitionArray.getJSONObject(i);
+                    String definition = jsonDefinitionObject.optString("definition").toString();
+                    String partOfSpeech = jsonDefinitionObject.optString("partOfSpeech").toString();
+                    wordDefinitions.add_definition(definition);
+                    wordDefinitions.add_partOfSpeech(partOfSpeech);
 
+                }
                 //return new String[] {definition, word};
-                return new String[] {definition, word};
+                return wordDefinitions;
             } catch (JSONException e) {
                 e.printStackTrace();
             }
