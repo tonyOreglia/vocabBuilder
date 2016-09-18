@@ -28,8 +28,6 @@ public class Word {
 
     int _id;
     String _word;
-    //String _definition;
-    //String _partOfSpeech;
     ArrayList<String> _definition = new ArrayList<String>();
     ArrayList<String> _partOfSpeech = new ArrayList<String>();
 
@@ -38,6 +36,8 @@ public class Word {
         for(int i=0; i<_definition.size(); i++) {
             allDefinitions.append(i+1 + ". ");
             allDefinitions.append(_definition.get(i));
+            allDefinitions.append("; ");
+            allDefinitions.append(this._partOfSpeech.get(i));
             allDefinitions.append("\n");
         }
         return allDefinitions.toString();

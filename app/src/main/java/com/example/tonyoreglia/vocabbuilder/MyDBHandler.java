@@ -17,6 +17,8 @@ public class MyDBHandler extends SQLiteOpenHelper {
     private static final String COLUMN_ID = "_id";
     private static final String COLUMN_WORD = "word";
     private static final String COLUMN_DEFINITION = "definition";
+    private static final String COLUMN_PARTOFSPEECH= "partOfSpeech";
+
 
     public MyDBHandler(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, DATABASE_NAME, factory, DATABASE_VERSION);
