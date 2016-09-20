@@ -83,10 +83,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void displayWordsInList() {
+        String temp = "";
         words.clear();
         String[] result = dbHandler.databaseToString().split("\\n");
         for (int x=0; x<result.length; x++) {
+            if(result[x].equals(temp)) {
+                continue;
+            }
             words.add(result[x]);
+            temp = result[x];
             //System.out.println(result[x]);
         }
 
@@ -102,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
         Word word = new Word(wordInput.getText().toString());
         //set definition of word object here by calling API
         //dbHandler.addWord(word);
+        //displayWordsInList();
         Log.i("INFO", "I'm here in addWordButtonClicked");
         new RetrieveFeedTask().execute(word.get_word());
 
@@ -116,7 +122,6 @@ public class MainActivity extends AppCompatActivity {
 
     class RetrieveFeedTask extends AsyncTask<String, Void, String> {
         protected void onPreExecute() {
-
         }
 
         protected String doInBackground(String... word) {
@@ -160,11 +165,8 @@ public class MainActivity extends AppCompatActivity {
             Log.i("INFO", response);
 
             Word wordDefinitions = parseJson(response);
-
-            //dbHandler.updateWord(wordObject);
-
+            //dbHandler.updateWord(wordDefinitions);
             dbHandler.addWord(wordDefinitions);
-
             displayWordsInList();
         }
 
@@ -184,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
                     String partOfSpeech = jsonDefinitionObject.optString("partOfSpeech").toString();
                     wordDefinitions.add_definition(definition);
                     wordDefinitions.add_partOfSpeech(partOfSpeech);
-
+                    Log.i("INFO", "definition " + i + ". " + wordDefinitions.get_definition());
                 }
                 //return new String[] {definition, word};
                 return wordDefinitions;

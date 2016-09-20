@@ -1,5 +1,6 @@
 package com.example.tonyoreglia.vocabbuilder;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -31,27 +32,36 @@ public class Word {
     ArrayList<String> _definition = new ArrayList<String>();
     ArrayList<String> _partOfSpeech = new ArrayList<String>();
 
-    public String get_definition() {
-        StringBuilder allDefinitions = new StringBuilder();
-        for(int i=0; i<_definition.size(); i++) {
-            allDefinitions.append(i+1 + ". ");
-            allDefinitions.append(_definition.get(i));
-            allDefinitions.append("; ");
-            allDefinitions.append(this._partOfSpeech.get(i));
-            allDefinitions.append("\n");
-        }
-        return allDefinitions.toString();
+//    public String get_definition() {
+//        StringBuilder allDefinitions = new StringBuilder();
+//        for(int i=0; i<_definition.size(); i++) {
+//            allDefinitions.append(i+1 + ". ");
+//            allDefinitions.append(_definition.get(i));
+//            allDefinitions.append("; ");
+//            allDefinitions.append(this._partOfSpeech.get(i));
+//            allDefinitions.append("\n");
+//        }
+//        return allDefinitions.toString();
+//    }
+
+    public ArrayList<String> get_definition() {
+        return _definition;
     }
 
-    public String get_partOfSpeech() {
-        StringBuilder allPartsOfSpeech = new StringBuilder();
-        for(int i=0; i<_partOfSpeech.size(); i++) {
-            allPartsOfSpeech.append(i+1 + ". ");
-            allPartsOfSpeech.append(_partOfSpeech.get(i));
-            allPartsOfSpeech.append("\n");
-        }
-        return allPartsOfSpeech.toString();
+    public ArrayList<String> get_partOfSpeech() {
+        return _partOfSpeech;
     }
+
+
+//    public String get_partOfSpeech() {
+//        StringBuilder allPartsOfSpeech = new StringBuilder();
+//        for(int i=0; i<_partOfSpeech.size(); i++) {
+//            allPartsOfSpeech.append(i+1 + ". ");
+//            allPartsOfSpeech.append(_partOfSpeech.get(i));
+//            allPartsOfSpeech.append("\n");
+//        }
+//        return allPartsOfSpeech.toString();
+//    }
 
     public int get_id() {
         return _id;

@@ -17,8 +17,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
     private static final String COLUMN_ID = "_id";
     private static final String COLUMN_WORD = "word";
     private static final String COLUMN_DEFINITION = "definition";
-    private static final String COLUMN_PARTOFSPEECH= "partOfSpeech";
-
+    private static final String COLUMN_PARTOFSPEECH = "partOfSpeech";
 
     public MyDBHandler(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, DATABASE_NAME, factory, DATABASE_VERSION);
@@ -29,7 +28,8 @@ public class MyDBHandler extends SQLiteOpenHelper {
         String query = "CREATE TABLE " + TABLE_WORDS + "(" +
                 COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COLUMN_WORD + " TEXT, " +
-                COLUMN_DEFINITION + " TEXT" +
+                COLUMN_DEFINITION + " TEXT, " +
+                COLUMN_PARTOFSPEECH + " TEXT" +
                 ");";
         db.execSQL(query);
     }
@@ -42,12 +42,19 @@ public class MyDBHandler extends SQLiteOpenHelper {
 
     //add new row to the database
     public void addWord(Word word) {
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_WORD, word.get_word());
-        values.put(COLUMN_DEFINITION, word.get_definition());
-        SQLiteDatabase db = getWritableDatabase();
-        db.insert(TABLE_WORDS, null, values);
-        db.close();
+
+        //ContentValues values = new ContentValues();
+        Log.i("INFO", "number of definitions: " + word.get_definition().size());
+        for(int i=0; i < word.get_definition().size(); i++) {
+            ContentValues values = new ContentValues();
+            values.put(COLUMN_WORD, word.get_word());
+            values.put(COLUMN_DEFINITION, word.get_definition().get(i));
+            values.put(COLUMN_PARTOFSPEECH, word.get_partOfSpeech().get(i));
+            SQLiteDatabase db = getWritableDatabase();
+            db.insert(TABLE_WORDS, null, values);
+            values.clear();
+            db.close();
+        }
     }
 
     public void updateWord(Word word) {
@@ -86,8 +93,10 @@ public class MyDBHandler extends SQLiteOpenHelper {
         return dbString;
     }
 
+    //print out the word definitions
     public String databaseDefinitionToString(String word) {
-        String dbString = "";
+        StringBuilder dbString = new StringBuilder();
+        int definitionCounter = 1;
         SQLiteDatabase db = getWritableDatabase();
         String query  = "SELECT * FROM " + TABLE_WORDS + " WHERE 1";
 
@@ -105,7 +114,11 @@ public class MyDBHandler extends SQLiteOpenHelper {
 
                 if(c.getString(c.getColumnIndex(COLUMN_WORD)).equals(word)) {
                     Log.i("INFO", "Inside print db definition 2");
-                    dbString += c.getString(c.getColumnIndex(COLUMN_DEFINITION));
+                    dbString.append(definitionCounter + ". ");
+                    dbString.append(c.getString(c.getColumnIndex(COLUMN_DEFINITION)));
+                    dbString.append("; " + c.getString(c.getColumnIndex(COLUMN_PARTOFSPEECH)));
+                    dbString.append("\n");
+                    definitionCounter++;
                 }
 //                dbString += c.getString(c.getColumnIndex("word"));
 //                dbString += "\n";
@@ -113,7 +126,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
             c.moveToNext();
         }
         db.close();
-        return dbString;
+        return dbString.toString();
     }
 }
 

@@ -27,7 +27,9 @@
         android:onClick="addWordButtonClicked"
         android:layout_alignTop="@+id/removeWordButtton"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:elegantTextHeight="false"
+        android:clickable="false" />
 
     <Button
         android:layout_width="wrap_content"
