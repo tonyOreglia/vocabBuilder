@@ -13,7 +13,6 @@ public class MyDBHandler extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "words.db";
     private static final String TABLE_WORDS = "words";
-
     private static final String COLUMN_ID = "_id";
     private static final String COLUMN_WORD = "word";
     private static final String COLUMN_DEFINITION = "definition";
@@ -55,6 +54,13 @@ public class MyDBHandler extends SQLiteOpenHelper {
             values.clear();
             db.close();
         }
+        if(word.get_definition().size() == 0) {
+            ContentValues values = new ContentValues();
+            values.put(COLUMN_WORD, word.get_word());
+            SQLiteDatabase db = getWritableDatabase();
+            db.insert(TABLE_WORDS, null, values);
+            db.close();
+        }
     }
 
     public void updateWord(Word word) {
@@ -67,6 +73,27 @@ public class MyDBHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
         String formatted_word = word.substring(0,1).toUpperCase() + word.substring(1).toLowerCase();
         db.execSQL("DELETE FROM " + TABLE_WORDS + " WHERE " + COLUMN_WORD + "=\"" + formatted_word + "\";");
+    }
+
+    public boolean checkForWord(String word) {
+        SQLiteDatabase db = getWritableDatabase();
+        String query  = "SELECT * FROM " + TABLE_WORDS + " WHERE 1";
+
+        //cursor point to a location in you results
+        Cursor c = db.rawQuery(query, null);
+        //move to the first row in the results
+        c.moveToFirst();
+
+        while(!c.isAfterLast()) {
+            //try changing this to the constant COLUMN_WORD
+            if(!c.getString(c.getColumnIndex(COLUMN_WORD)).equals(null)) {  ///THIS CHANGE UNCHECKED
+                if(c.getString(c.getColumnIndex(COLUMN_WORD)).equals(word)) {
+                    return true;
+                }
+            }
+            c.moveToNext();
+        }
+        return false;
     }
 
     //print out the database words as a string
@@ -113,10 +140,17 @@ public class MyDBHandler extends SQLiteOpenHelper {
                 Log.i("INFO", word);
 
                 if(c.getString(c.getColumnIndex(COLUMN_WORD)).equals(word)) {
-                    Log.i("INFO", "Inside print db definition 2");
+                    Log.i("INFO", "Inside print db definition");
                     dbString.append(definitionCounter + ". ");
                     dbString.append(c.getString(c.getColumnIndex(COLUMN_DEFINITION)));
-                    dbString.append("; " + c.getString(c.getColumnIndex(COLUMN_PARTOFSPEECH)));
+                    String partOfSpeech = c.getString(c.getColumnIndex(COLUMN_PARTOFSPEECH));
+                    Log.i("INFO", "Part of Speech: " + partOfSpeech);
+                    if(partOfSpeech.equals("null")) {
+                        Log.i("INFO", "No part of speech being added to word string");
+                    }
+                    else {
+                        dbString.append("; " + partOfSpeech);
+                    }
                     dbString.append("\n");
                     definitionCounter++;
                 }

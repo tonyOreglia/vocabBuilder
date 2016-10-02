@@ -9,8 +9,8 @@ import java.util.ArrayList;
 public class Word {
     public Word(String _word) {
         this._word = _word.substring(0, 1).toUpperCase() + _word.substring(1).toLowerCase();
-//        this._definition.add(null);
-//        this._partOfSpeech.add(null);
+        //this._definition.add(null);
+        //this._partOfSpeech.add(null);
     }
     public Word(String _word, String _definition) {
         this._word = _word.substring(0, 1).toUpperCase() + _word.substring(1).toLowerCase();

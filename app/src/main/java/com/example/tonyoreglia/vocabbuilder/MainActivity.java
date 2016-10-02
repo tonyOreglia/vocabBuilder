@@ -1,12 +1,14 @@
 package com.example.tonyoreglia.vocabbuilder;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,6 +27,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import android.os.AsyncTask;
+import android.widget.Toast;
 
 //JSON parser libraryies
 import org.json.JSONArray;
@@ -36,7 +39,7 @@ import org.json.JSONTokener;
 public class MainActivity extends AppCompatActivity {
     //API variables
     static final String API_KEY = "SmP6Z0l2s4msh4a3zK8A5AAfwELcp1RWStEjsnE1JXe3FeAP7W";
-
+    static final String API_ERROR = "UNABLE TO PULL DEFINITION";
     ArrayList<String> words = new ArrayList<String>();
 
     MyDBHandler dbHandler;
@@ -104,20 +107,44 @@ public class MainActivity extends AppCompatActivity {
 
     //add word to database
     public void addWordButtonClicked(View view) {
-        Word word = new Word(wordInput.getText().toString());
-        //set definition of word object here by calling API
-        //dbHandler.addWord(word);
-        //displayWordsInList();
         Log.i("INFO", "I'm here in addWordButtonClicked");
-        new RetrieveFeedTask().execute(word.get_word());
-
+        String input = wordInput.getText().toString();
+        if(input.equals("")) {
+            displayToast("Type a word to add");
+        }
+        else {
+            Word word = new Word(input.trim());
+            if (!dbHandler.checkForWord(word.get_word())) {
+                new RetrieveFeedTask().execute(word.get_word());
+            }
+            else {
+                wordInput.setText("");
+                Log.i("INFO", "Word already in list");
+                displayToast(word.get_word() + " is already in your list.");
+            }
+        }
     }
 
     //delete word from database
     public void removeWordButtonClicked(View view) {
         String inputText = wordInput.getText().toString();
-        dbHandler.deleteWord(inputText);
-        displayWordsInList();
+        if (inputText.equals("")) {
+            ;//do nothing
+        }
+        else {
+            dbHandler.deleteWord(inputText);
+            displayWordsInList();
+        }
+    }
+
+    public void displayToast(String message) {
+        Context context = getApplicationContext();
+        CharSequence text = message;
+        int duration = Toast.LENGTH_SHORT;
+
+        Toast toast = Toast.makeText(context, text, duration);
+        toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL, 0, 0);
+        toast.show();
     }
 
     class RetrieveFeedTask extends AsyncTask<String, Void, String> {
@@ -131,8 +158,6 @@ public class MainActivity extends AppCompatActivity {
 
                 //String url = "https://wordsapiv1.p.mashape.com/words/stoic/definitions";
                 URL apiUrl = new URL(url);
-                //Log.i("INFO", apiUrl);
-                //URL url = new URL(apiUrl);
                 HttpURLConnection urlConnection = (HttpURLConnection) apiUrl.openConnection();
                 urlConnection.setRequestProperty("Accept", "application/json");
                 urlConnection.setRequestProperty("X-Mashape-Key", API_KEY);
@@ -141,11 +166,11 @@ public class MainActivity extends AppCompatActivity {
                     StringBuilder stringBuilder = new StringBuilder();
                     String line;
                     while ((line = bufferedReader.readLine()) != null) {
+                        //Log.i("INFO", "Appending input to line: " + line);
                         stringBuilder.append(line).append("\n");
                     }
                     bufferedReader.close();
                     return stringBuilder.toString();
-
                 }
                 finally{
                     urlConnection.disconnect();
@@ -153,24 +178,38 @@ public class MainActivity extends AppCompatActivity {
             }
             catch(Exception e) {
                 Log.e("ERROR", e.getMessage(), e);
+                //Log.i("INFO", "error message: " + e.getMessage(), e);
                 return null;
             }
         }
 
         protected void onPostExecute(String response) {
-
             if (response == null) {
-                response = "THERE WAS AN ERROR IN POST EXECUTE";
+                //response = API_ERROR;
+                Log.i("INFO", "Here in onPostExecute. Response is null");
+                displayToast("Unable to find definition. Please connect to internet, check spelling, and try again.");
+                wordInput.setText("");
+//                Context context = getApplicationContext();
+//                CharSequence text = "Unable to find definition. Please connect to internet and try again.";
+//                int duration = Toast.LENGTH_SHORT;
+//
+//                Toast toast = Toast.makeText(context, text, duration);
+//                toast.show();
             }
-            Log.i("INFO", response);
-
-            Word wordDefinitions = parseJson(response);
-            //dbHandler.updateWord(wordDefinitions);
-            dbHandler.addWord(wordDefinitions);
-            displayWordsInList();
+            else {
+                Log.i("INFO", "Here in onPostExecute. There is some response");
+                Log.i("INFO", response);
+                Word wordDefinitions = parseJson(response);
+                dbHandler.addWord(wordDefinitions);
+                //dbHandler.addWord(wordDefinitions);
+                displayWordsInList();
+            }
         }
 
         public Word parseJson(String jsonDefinition) {
+//            if(jsonDefinition.equals(API_ERROR)) {
+//
+//            }
             try {
                 JSONObject definitions = (JSONObject) new JSONTokener(jsonDefinition).nextValue();
                 Log.i("INFO", "Inside JSON Parser");
@@ -180,7 +219,7 @@ public class MainActivity extends AppCompatActivity {
                 Word wordDefinitions = new Word(word);
                 //Get the instance of JSONArray that contains JSONObjects
                 JSONArray jsonDefinitionArray = definitions.optJSONArray("definitions");
-                for(int i = 0; i < jsonDefinitionArray.length() && (i < 3); i++) {
+                for(int i = jsonDefinitionArray.length()-1; i >= 0 && i >= jsonDefinitionArray.length() - 3; i--) {
                     JSONObject jsonDefinitionObject = jsonDefinitionArray.getJSONObject(i);
                     String definition = jsonDefinitionObject.optString("definition").toString();
                     String partOfSpeech = jsonDefinitionObject.optString("partOfSpeech").toString();
