@@ -45,7 +45,8 @@ public class MainActivity extends AppCompatActivity {
     MyDBHandler dbHandler;
     EditText wordInput;
 
-    ListView tonysListView;
+    //ListView tonysListView;
+    ListView customListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         //printDataBase();
         displayWordsInList();
 
-        tonysListView.setOnItemClickListener(
+        customListView.setOnItemClickListener(
                 new AdapterView.OnItemClickListener(){
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -99,9 +100,15 @@ public class MainActivity extends AppCompatActivity {
         }
 
         //display string arraylist of words from database
-        ListAdapter tonysAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, words);
-        tonysListView = (ListView) findViewById(R.id.tonysListView);
-        tonysListView.setAdapter(tonysAdapter);
+        //ListAdapter tonysAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, words);
+        ListAdapter customListAdapter = new customAdapter(this, words);// Pass the food arrary to the constructor.
+
+        //tonysListView = (ListView) findViewById(R.id.tonysListView);
+        customListView = (ListView) findViewById(R.id.customListView);
+
+        //tonysListView.setAdapter(tonysAdapter);
+        customListView.setAdapter(customListAdapter);
+
         wordInput.setText("");
     }
 
@@ -126,16 +133,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //delete word from database
-    public void removeWordButtonClicked(View view) {
-        String inputText = wordInput.getText().toString();
-        if (inputText.equals("")) {
-            ;//do nothing
-        }
-        else {
-            dbHandler.deleteWord(inputText);
-            displayWordsInList();
-        }
-    }
+//    public void removeWordButtonClicked(View view) {
+//
+//        String inputText = wordInput.getText().toString();
+//        if (inputText.equals("")) {
+//            displayToast("Type a word to remove");
+//        }
+//        else {
+//            dbHandler.deleteWord(inputText);
+//            displayWordsInList();
+//        }
+//    }
 
     public void displayToast(String message) {
         Context context = getApplicationContext();

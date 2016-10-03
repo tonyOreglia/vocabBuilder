@@ -15,7 +15,7 @@
     <ListView
         android:layout_width="match_parent"
         android:layout_height="150dp"
-        android:id="@+id/tonysListView"
+        android:id="@+id/customListView"
         android:layout_above="@+id/wordInput"
         android:layout_alignParentTop="true"></ListView>
 
