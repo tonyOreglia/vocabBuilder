@@ -22,32 +22,23 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add word"
+        android:text="ADD"
         android:id="@+id/addWordButton"
         android:onClick="addWordButtonClicked"
-        android:layout_alignTop="@+id/removeWordButtton"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:elegantTextHeight="false"
-        android:clickable="false" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Remove Word"
-        android:id="@+id/removeWordButtton"
-        android:onClick="removeWordButtonClicked"
-        android:layout_marginBottom="47dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:clickable="false"
+        android:layout_below="@+id/customListView"
+        android:layout_toRightOf="@+id/wordInput"
+        android:layout_toEndOf="@+id/wordInput" />
 
     <EditText
-        android:layout_width="wrap_content"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:id="@+id/wordInput"
         android:width="300dp"
-        android:layout_above="@+id/addWordButton"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="57dp" />
 
 </RelativeLayout>

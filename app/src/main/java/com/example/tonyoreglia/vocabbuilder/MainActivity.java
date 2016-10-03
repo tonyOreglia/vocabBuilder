@@ -59,6 +59,17 @@ public class MainActivity extends AppCompatActivity {
         wordInput = (EditText) findViewById(R.id.wordInput);
 
         dbHandler = new MyDBHandler(this, null, null, 1);
+
+//
+//        ListView list = (ListView) findViewById(R.id.listview);
+//        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                Object listItem = list.getItemAtPosition(position);
+//            }
+//        });
+        customListView = (ListView) findViewById(R.id.customListView);
+
         //printDataBase();
         displayWordsInList();
 
@@ -66,6 +77,9 @@ public class MainActivity extends AppCompatActivity {
                 new AdapterView.OnItemClickListener(){
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        Log.i("INFO", "Inside Click Listener");
+
+                        Object listItem = customListView.getItemAtPosition(position);
                         String word = String.valueOf(parent.getItemAtPosition(position));
                         String definition = dbHandler.databaseDefinitionToString(word);
 

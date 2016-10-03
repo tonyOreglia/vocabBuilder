@@ -147,9 +147,10 @@ public class MyDBHandler extends SQLiteOpenHelper {
                     Log.i("INFO", "Part of Speech: " + partOfSpeech);
                     if(partOfSpeech.equals("null")) {
                         Log.i("INFO", "No part of speech being added to word string");
+                        dbString.append("\n");
                     }
                     else {
-                        dbString.append("; " + partOfSpeech);
+                        dbString.append("; " + partOfSpeech + "\n");
                     }
                     dbString.append("\n");
                     definitionCounter++;
